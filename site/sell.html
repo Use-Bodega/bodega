@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sell your API · BODEGA</title>
+<meta name="description" content="List any HTTPS API with a price per call and get paid in USDC on every answered call.">
+<meta property="og:title" content="Sell your API · BODEGA">
+<meta property="og:description" content="List any HTTPS API with a price per call and get paid in USDC on every answered call.">
+<meta property="og:type" content="website">
+<link rel="icon" href="/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=IBM+Plex+Mono:wght@400;600&family=Karla:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="awning"></div>
+<header class="sign"><div class="wrap">
+  <a class="brand" href="/"><img src="/logo.svg" alt=""><span class="name slab">BODEGA</span></a><span class="open">OPEN 24 HRS</span>
+  <nav><a href="/shelf">Shelf</a><a href="/agents">For agents</a><a href="/sell">Sell here</a><a href="/register">Register</a><a href="/docs">Docs</a></nav>
+</div></header>
+<main>
+<div class="board"><div class="wrap">
+  <div class="crumbs"><a href="/">Home</a> / Sell here</div>
+  <h1>Sell your API here</h1>
+  <p>Any HTTPS endpoint that takes a JSON POST. Set a price per call and a payout wallet. You are paid in USDC on every answered call, straight to that wallet. The fee is <span data-fee>3</span>% of the price.</p>
+</div></div>
+
+<section><div class="wrap">
+  <div class="two">
+    <div class="card">
+      <h3>List an item</h3><p>Signed with the payout wallet, which is the only one that can change it later.</p>
+      <label for="s-slug">Short name (a-z, 0-9, dashes)</label><input id="s-slug" placeholder="my-api" autocomplete="off">
+      <label for="s-name">Title</label><input id="s-name" maxlength="60" placeholder="What it is">
+      <label for="s-summary">One line about what it returns</label><input id="s-summary" maxlength="200">
+      <label for="s-url">Your endpoint</label><input id="s-url" placeholder="https://api.example.com/run" autocomplete="off">
+      <label for="s-price">Price per call, USDC</label><input id="s-price" type="number" min="0.01" step="0.01" value="0.05">
+      <label for="s-docs">How to call it (optional)</label><textarea id="s-docs" rows="2" maxlength="2000" placeholder='POST {"city": "Paris"}'></textarea>
+      <div class="row"><button id="s-list">Connect and list</button></div>
+      <div class="state" id="s-state" hidden></div>
+    </div>
+    <div class="card">
+      <h3>Check that a call is ours</h3><p>Every request we forward is signed with your item's secret. Refuse anything that does not match or is older than five minutes.</p>
+<pre>// headers on each forwarded call
+x-bodega-timestamp: 1767225600
+x-bodega-call:      bodega:9f2c… (unique per call)
+x-bodega-buyer:     the paying wallet
+x-bodega-signature: sha256=HMAC_SHA256(secret,
+                      timestamp + "." + raw body)</pre>
+      <p style="margin-top:12px">Answer with 2xx and you are paid. Answer with 4xx to turn down a bad input: no charge, and it is not counted against you. A 5xx, a timeout over 25 seconds or no answer counts as a failed call on your item.</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="shelves"><div class="wrap">
+  <h2>What sellers should know</h2>
+  <div class="aisles">
+    <div class="aisle"><span class="no">PAYOUT</span><h3>Straight to you</h3><p>Your part lands in your wallet in the same transaction the buyer signs. Nothing to withdraw.</p></div>
+    <div class="aisle"><span class="no">ACCOUNT</span><h3>USDC account first</h3><p>The payout wallet must already hold a USDC account. Receive any USDC once before listing.</p></div>
+    <div class="aisle"><span class="no">RECORD</span><h3>Your record is public</h3><p>Paid calls and failed calls show on your item. Answer fast and keep it clean.</p></div>
+    <div class="aisle"><span class="no">PRICE</span><h3>From $0.01</h3><p>Up to $100 per call. Change it any time with a new signature from the same wallet.</p></div>
+  </div>
+</div></section>
+</main>
+<footer><div class="wrap">
+  <span class="grow">BODEGA. APIs for AI agents, paid per call in USDC on Solana. We never hold funds.</span>
+  <a href="/docs">Docs</a><a href="/v1">API</a><a data-repo hidden target="_blank" rel="noopener">GitHub</a><a data-x hidden target="_blank" rel="noopener">X</a>
+</div></footer>
+<script src="https://unpkg.com/@solana/web3.js@1.98.4/lib/index.iife.min.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<div class="board"><div class="wrap">
+  <div class="crumbs"><a href="/">Home</a> / Shelf</div>
+  <h1>On the shelf</h1>
+  <p>Every item is an API with a price per call. The counts come from the ledger: calls that were paid on chain, and calls the seller failed, which nobody paid for.</p>
+</div></div>
+
+<section><div class="wrap">
+  <div class="shelf" id="items"><div class="empty">Loading the shelf…</div></div>
+</div></section>
+
+<section class="shelves" id="counter"><div class="wrap">
+  <h2>Free sample at the counter</h2>
+  <p class="lead">Run a house item with no wallet and see the real answer. Or ask for the price and see exactly what your agent would sign.</p>
+  <div class="counter">
+    <div>
+      <label for="c-item">Item</label><select id="c-item"></select>
+      <div id="c-fields"></div>
+      <div class="row"><button id="c-sample">Get a free sample</button><button class="plain" id="c-quote">Show the price</button></div>
+    </div>
+    <div class="screen" id="c-out"><span class="dim">The answer shows up here.</span></div>
+  </div>
+</div></section>

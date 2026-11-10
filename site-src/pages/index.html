@@ -1,0 +1,45 @@
+<div class="window"><div class="wrap">
+  <div>
+    <h1>The corner store for <em>AI agents.</em></h1>
+    <p>APIs sold one call at a time, paid in USDC on Solana. Your agent pays only when the call is answered, and the seller is paid in that same transaction.</p>
+    <div class="row"><a class="btn" href="/shelf">See the shelf</a><a class="btn plain" href="/sell">Sell your API here</a></div>
+    <div class="ca" id="ca" hidden><b>$BODEGA</b><code id="ca-text"></code><button class="plain" id="ca-copy" style="padding:5px 10px;font-size:13px">Copy</button><a id="ca-pump" target="_blank" rel="noopener">pump.fun</a></div>
+  </div>
+  <div class="rules">
+    <h3>House rules</h3>
+    <ol>
+      <li><b>No answer, no charge.</b> The payment is sent only after the seller answers.</li>
+      <li><b>We never hold your money.</b> It goes from your wallet to the seller's.</li>
+      <li><b>One transaction.</b> The seller's part and the fee move together, on chain.</li>
+      <li><b>Your agent has a limit.</b> You set it in your wallet, and you can take it back.</li>
+    </ol>
+  </div>
+</div></div>
+
+<section class="shelves"><div class="wrap">
+  <h2>Fresh on the shelf</h2>
+  <p class="lead">A few of the items your agent can buy right now. <a href="/shelf">The whole shelf</a> has free samples.</p>
+  <div class="shelf" id="items" data-limit="3"><div class="empty">Loading the shelf…</div></div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>How one call goes</h2>
+  <p class="lead">Four steps, about two seconds. If step three fails, step four never happens. <a href="/docs">Read the details.</a></p>
+  <div class="steps">
+    <div><b>1</b><h3>Ask</h3><p>The agent calls an item. The gateway answers 402 with the price and where each part goes.</p></div>
+    <div><b>2</b><h3>Sign</h3><p>The agent signs one transaction: USDC to the seller, the fee to us. It is not sent yet.</p></div>
+    <div><b>3</b><h3>Answer</h3><p>The gateway checks the payment would go through, then gets the seller's answer.</p></div>
+    <div><b>4</b><h3>Pay</h3><p>Only now the transaction goes on chain. Once it confirms, the agent gets the answer and a receipt.</p></div>
+  </div>
+</div></section>
+
+<section class="tight"><div class="wrap">
+  <h2>Find your aisle</h2>
+  <p class="lead">Whether you run an agent or sell an API, there is a page for you.</p>
+  <div class="aisles">
+    <a class="aisle" href="/shelf"><span class="no">AISLE 1</span><h3>The shelf</h3><p>Every API, its price per call and its record. Try a free sample.</p></a>
+    <a class="aisle" href="/agents"><span class="no">AISLE 2</span><h3>For agents</h3><p>Give your agent a USDC budget and install the kit or MCP server.</p></a>
+    <a class="aisle" href="/sell"><span class="no">AISLE 3</span><h3>Sell here</h3><p>List your API with a price and a payout wallet. Paid per answered call.</p></a>
+    <a class="aisle" href="/register"><span class="no">AISLE 4</span><h3>The register</h3><p>Every confirmed payment, each with its transaction.</p></a>
+  </div>
+</div></section>

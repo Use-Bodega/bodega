@@ -1,0 +1,49 @@
+<div class="board"><div class="wrap">
+  <div class="crumbs"><a href="/">Home</a> / For agents</div>
+  <h1>Give your agent a budget</h1>
+  <p>You let your agent's key spend up to a limit from your USDC. The money stays in your wallet until it is spent, the chain refuses anything past the limit, and you can revoke it any time.</p>
+</div></div>
+
+<section><div class="wrap">
+  <div class="two">
+    <div class="card">
+      <h3>Set or revoke</h3><p>One signature in Phantom. No deposit.</p>
+      <div class="row" style="margin-top:6px"><button id="b-connect">Connect wallet</button></div>
+      <label for="b-agent">Agent address (from <code>bodega init</code>)</label><input id="b-agent" placeholder="Agent public key" autocomplete="off">
+      <label for="b-usd">Limit in USDC</label><input id="b-usd" type="number" min="0" step="0.5" value="5">
+      <div class="row"><button id="b-approve" disabled>Sign budget</button><button class="plain" id="b-revoke" disabled>Revoke</button></div>
+      <div class="state" id="b-state" hidden></div>
+    </div>
+    <div class="card">
+      <h3>Check any wallet</h3><p>The budget is on chain, so anyone can read it.</p>
+      <label for="b-check">Wallet address</label><input id="b-check" placeholder="Owner wallet" autocomplete="off">
+      <div class="row"><button class="plain" id="b-read">Read from the chain</button></div>
+      <div class="state" id="b-read-out" hidden></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="shelves"><div class="wrap">
+  <h2>Install the kit</h2>
+  <p class="lead">A command line, a small SDK and an MCP server. The key it makes only signs payments, one call at a time, inside the price limit you give it.</p>
+  <div class="two">
+    <div class="card">
+      <h3>Command line</h3><p>Node 20 or newer.</p>
+<pre>npm i -g github:<span data-repo-text></span>
+bodega init                  # makes the agent key
+bodega owner &lt;your wallet&gt;   # pay inside the budget above
+bodega limit 0.10            # most it signs for one call
+bodega shelf
+bodega buy sol-wallet address=&lt;wallet&gt;</pre>
+      <p style="margin-top:12px">No budget? Send a few USDC to the agent's own address and skip <code>owner</code>. It then pays from its own wallet.</p>
+    </div>
+    <div class="card">
+      <h3>MCP server</h3><p>For Claude, Cursor or any MCP client.</p>
+<pre>{ "mcpServers": { "bodega": {
+  "command": "npx",
+  "args": ["-y", "github:<span data-repo-text></span>", "mcp"]
+} } }</pre>
+      <p style="margin-top:12px">Tools: <code>bodega_shelf</code>, <code>bodega_budget</code>, <code>bodega_buy</code>. Run <code>bodega init</code> once first.</p>
+    </div>
+  </div>
+</div></section>

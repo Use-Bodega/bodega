@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The shelf · BODEGA</title>
+<meta name="description" content="Every API on the shelf with its price per call, and how many calls were paid and how many the seller failed.">
+<meta property="og:title" content="The shelf · BODEGA">
+<meta property="og:description" content="Every API on the shelf with its price per call, and how many calls were paid and how many the seller failed.">
+<meta property="og:type" content="website">
+<link rel="icon" href="/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=IBM+Plex+Mono:wght@400;600&family=Karla:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="awning"></div>
+<header class="sign"><div class="wrap">
+  <a class="brand" href="/"><img src="/logo.svg" alt=""><span class="name slab">BODEGA</span></a><span class="open">OPEN 24 HRS</span>
+  <nav><a href="/shelf">Shelf</a><a href="/agents">For agents</a><a href="/sell">Sell here</a><a href="/register">Register</a><a href="/docs">Docs</a></nav>
+</div></header>
+<main>
+<div class="board"><div class="wrap">
+  <div class="crumbs"><a href="/">Home</a> / Shelf</div>
+  <h1>On the shelf</h1>
+  <p>Every item is an API with a price per call. The counts come from the ledger: calls that were paid on chain, and calls the seller failed, which nobody paid for.</p>
+</div></div>
+
+<section><div class="wrap">
+  <div class="shelf" id="items"><div class="empty">Loading the shelf…</div></div>
+</div></section>
+
+<section class="shelves" id="counter"><div class="wrap">
+  <h2>Free sample at the counter</h2>
+  <p class="lead">Run a house item with no wallet and see the real answer. Or ask for the price and see exactly what your agent would sign.</p>
+  <div class="counter">
+    <div>
+      <label for="c-item">Item</label><select id="c-item"></select>
+      <div id="c-fields"></div>
+      <div class="row"><button id="c-sample">Get a free sample</button><button class="plain" id="c-quote">Show the price</button></div>
+    </div>
+    <div class="screen" id="c-out"><span class="dim">The answer shows up here.</span></div>
+  </div>
+</div></section>
+</main>
+<footer><div class="wrap">
+  <span class="grow">BODEGA. APIs for AI agents, paid per call in USDC on Solana. We never hold funds.</span>
+  <a href="/docs">Docs</a><a href="/v1">API</a><a data-repo hidden target="_blank" rel="noopener">GitHub</a><a data-x hidden target="_blank" rel="noopener">X</a>
+</div></footer>
+<script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<div class="board"><div class="wrap">
+  <div class="crumbs"><a href="/">Home</a> / Docs</div>
+  <h1>How it works</h1>
+  <p>Everything an agent or a seller needs: the quote, the payment, the receipt, the errors and the rules we keep.</p>
+</div></div>
+
+<section><div class="wrap doc">
+  <aside>
+    <a href="#flow">One call</a><a href="#quote">The quote</a><a href="#payment">The payment</a><a href="#receipt">The receipt</a><a href="#errors">Errors</a><a href="#rules">Rules</a><a href="#endpoints">Endpoints</a>
+  </aside>
+  <div>
+    <h2 id="flow">One call</h2>
+    <ol>
+      <li>The agent sends <code>POST /v1/buy/&lt;item&gt;</code> with its JSON input and no payment. It gets <code>402</code> and a quote.</li>
+      <li>The agent builds one Solana transaction from the quote, signs it and sends the same request again with the transaction, base64, in the <code>X-Payment</code> header.</li>
+      <li>The gateway checks the transaction is exactly the quoted payment, signs it as fee payer and simulates it. Then it calls the seller.</li>
+      <li>Only after the seller answers with 2xx is the transaction sent. When it confirms, the agent gets the answer and a receipt.</li>
+    </ol>
+    <p>The kit does all of this in one call: <code>bodega buy &lt;item&gt; key=value</code>.</p>
+
+    <h2 id="quote">The quote</h2>
+    <table><thead><tr><th>Field</th><th>Meaning</th></tr></thead><tbody>
+      <tr><td><code>sellerAccount</code>, <code>sellerAmount</code></td><td>The seller's USDC account and what it gets, in units of 0.000001 USDC.</td></tr>
+      <tr><td><code>feeAccount</code>, <code>feeAmount</code></td><td>The fee wallet's USDC account and the fee. Zero when the seller holds the token.</td></tr>
+      <tr><td><code>feePayer</code></td><td>Our key that pays the network fee and signs last. Your agent needs no SOL.</td></tr>
+      <tr><td><code>blockhash</code></td><td>A recent blockhash, so the kit needs no RPC of its own. A payment lives about a minute.</td></tr>
+      <tr><td><code>ref</code></td><td>Goes in the memo, so each payment is unique.</td></tr>
+    </tbody></table>
+
+    <h2 id="payment">The payment</h2>
+    <p>One transaction, signed by the agent key and our fee payer, with these instructions and nothing else:</p>
+    <ul>
+      <li>a compute unit limit, up to 40,000, and optionally a compute price up to 50,000 micro-lamports;</li>
+      <li>a USDC <code>TransferChecked</code> to the seller and one for the fee, both from the same account;</li>
+      <li>one memo, <code>bodega:&lt;ref&gt;</code>.</li>
+    </ul>
+    <p>The agent key signs either as the owner of the USDC account or as its delegate. A delegate can spend only the allowance the owner set on the <a href="/agents">agents page</a>.</p>
+
+    <h2 id="receipt">The receipt</h2>
+    <p>A paid call returns <code>{ item, result, receipt }</code>. The receipt has the transaction, an explorer link, what was paid, what the seller got and the fee. The same receipt comes base64 in the <code>X-Payment-Response</code> header.</p>
+    <p>If the transaction was sent but has not confirmed in about 20 seconds, the call returns <code>202</code> with <code>receipt: /v1/receipt/&lt;tx&gt;</code>. The answer waits there for ten minutes and is handed over once the chain shows the payment. If it never lands, nothing was charged and no answer is given.</p>
+
+    <h2 id="errors">Errors</h2>
+    <table><thead><tr><th>Code</th><th>What happened</th><th>Charged</th></tr></thead><tbody>
+      <tr><td><code>402 payment_required</code></td><td>No payment yet: here is the quote.</td><td>No</td></tr>
+      <tr><td><code>402 wrong_amount</code>, <code>wrong_recipient</code>, <code>unexpected_instruction</code></td><td>The transaction is not the quoted payment.</td><td>No</td></tr>
+      <tr><td><code>402 over_budget</code>, <code>no_funds</code></td><td>The key may not spend this much, or the wallet does not hold it.</td><td>No</td></tr>
+      <tr><td><code>402 would_not_settle</code></td><td>The payment would fail on chain, often because it is too old. Sign a new one.</td><td>No</td></tr>
+      <tr><td><code>402 payment_used</code></td><td>That payment already bought an answer.</td><td>Once, before</td></tr>
+      <tr><td><code>4xx seller_refused</code></td><td>The seller turned the input down. Their reply is in <code>sellerReply</code>.</td><td>No</td></tr>
+      <tr><td><code>502 seller_failed</code>, <code>seller_unreachable</code></td><td>The seller errored or did not answer in 25 seconds.</td><td>No</td></tr>
+      <tr><td><code>202 payment_pending</code></td><td>Sent, not confirmed yet. Fetch the receipt URL.</td><td>Once it lands</td></tr>
+    </tbody></table>
+
+    <h2 id="rules">Rules</h2>
+    <ul>
+      <li>We never hold money. The buyer's USDC goes to the seller and the fee wallet in one transaction.</li>
+      <li>The fee is <span data-fee>3</span>% of the price, taken from the seller's part. A seller holding the token pays none.</li>
+      <li>The seller carries one small risk: a buyer can empty the wallet between our check and the send. Then the seller answered for nothing. We check right before calling the seller to keep that short.</li>
+      <li>Every forwarded call is signed for the seller with HMAC-SHA256. See <a href="/sell">Sell here</a>.</li>
+      <li>We can take an item off the shelf. Its owner cannot bring it back.</li>
+    </ul>
+
+    <h2 id="endpoints">Endpoints</h2>
+    <table><tbody>
+      <tr><td><code>GET /v1</code></td><td>Fee payer, fee, minimum price.</td></tr>
+      <tr><td><code>GET /v1/shelf</code>, <code>/v1/shelf/&lt;item&gt;</code></td><td>The catalog with paid and failed counts.</td></tr>
+      <tr><td><code>POST /v1/shelf</code></td><td>List, change or remove an item, signed by the payout wallet.</td></tr>
+      <tr><td><code>POST /v1/buy/&lt;item&gt;</code></td><td>Buy one call.</td></tr>
+      <tr><td><code>POST /v1/sample/&lt;item&gt;</code></td><td>A free call to a house item, limited per day.</td></tr>
+      <tr><td><code>GET /v1/receipt/&lt;tx&gt;</code></td><td>The answer of a call that confirmed late.</td></tr>
+      <tr><td><code>GET /v1/budget?owner=</code></td><td>A wallet's USDC, delegate and allowance.</td></tr>
+      <tr><td><code>GET /v1/ledger</code>, <code>/v1/stats</code></td><td>Confirmed payments and totals.</td></tr>
+    </tbody></table>
+  </div>
+</div></section>

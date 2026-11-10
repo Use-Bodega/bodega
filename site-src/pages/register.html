@@ -1,0 +1,13 @@
+<section class="register"><div class="wrap">
+  <div class="crumbs" style="color:#b9ad97"><a href="/">Home</a> / Register</div>
+  <h1 style="font-size:clamp(34px,5.4vw,54px);margin:0 0 10px">The register</h1>
+  <p class="lead">Confirmed payments only. Every row is a transaction you can open. Calls made by our own wallets are marked as ours.</p>
+  <div class="nums">
+    <div><b id="n-paid">0</b><span>paid calls</span></div>
+    <div><b id="n-failed">0</b><span>failed calls, not charged</span></div>
+    <div><b id="n-vol">$0</b><span>paid to sellers</span></div>
+    <div><b id="n-out">0</b><span>calls by outside wallets</span></div>
+  </div>
+  <div class="scroll"><table><thead><tr><th>When</th><th>Item</th><th>Paid</th><th>Buyer</th><th>Seller</th><th>Transaction</th></tr></thead><tbody id="ledger" data-limit="100"><tr><td colspan="6">No payments yet.</td></tr></tbody></table></div>
+  <p class="lead" style="margin-top:22px">The same data as JSON: <a href="/v1/ledger">/v1/ledger</a> and <a href="/v1/stats">/v1/stats</a>.</p>
+</div></section>
