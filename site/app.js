@@ -1,7 +1,7 @@
 // BODEGA site: one script for every page. Each part runs only on the page that has its elements.
 (() => {
   // filled in at launch
-  const CONFIG = { contract: '', repo: 'Use-Bodega/bodega', x: '' };
+  const CONFIG = { contract: '', repo: 'Use-Bodega/bodega', x: 'https://x.com/usebodega_x' };
   const $ = (id) => document.getElementById(id);
   const USDC = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', TOKEN = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
   const ADDRESS = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
