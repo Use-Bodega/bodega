@@ -95,14 +95,14 @@ export const HOUSE = [
     },
   },
   {
-    slug: 'sol-fees', name: 'Solana Priority Fees', price: 0.01, summary: 'What recent blocks paid for priority, in micro-lamports per compute unit: median, 75th and 90th percentile.',
-    input: [{ name: 'account', type: 'string', required: false, pattern: ADDRESS, description: 'A writable account your transaction touches, for fees local to it.' }],
-    run: async (env, { account }) => {
-      const rows = await rpc(env, 'getRecentPrioritizationFees', [account ? [account] : []]);
-      const fees = rows.map((r) => r.prioritizationFee).sort((a, b) => a - b);
-      if (!fees.length) throw new Error('no fee data');
-      const at = (p) => fees[Math.min(fees.length - 1, Math.floor(fees.length * p))];
-      return { slots: fees.length, median: at(0.5), p75: at(0.75), p90: at(0.9), max: fees.at(-1), unit: 'micro-lamports per compute unit' };
+    slug: 'sol-fees', name: 'Solana Priority Fees', price: 0.01, summary: 'What to pay for priority right now, in micro-lamports per compute unit: low, medium, high and very high.',
+    input: [{ name: 'account', type: 'string', required: false, pattern: ADDRESS, description: 'An account your transaction writes to, for fees local to it. Default: the Jupiter aggregator.' }],
+    run: async (env, { account = 'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4' }) => {
+      // Helius estimates from recent landed transactions; the plain RPC method only gives each slot's minimum, which is nearly always 0
+      const est = await rpc(env, 'getPriorityFeeEstimate', [{ accountKeys: [account], options: { includeAllPriorityFeeLevels: true } }]).catch(() => null);
+      const l = est?.priorityFeeLevels;
+      if (!l) throw new Error('no fee estimate');
+      return { account, low: Math.round(l.low), medium: Math.round(l.medium), high: Math.round(l.high), veryHigh: Math.round(l.veryHigh), unit: 'micro-lamports per compute unit', source: 'Helius' };
     },
   },
 ];

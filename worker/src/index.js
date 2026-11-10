@@ -93,7 +93,11 @@ async function list(request, env, body, origin) {
   if (old && old.pay_to !== payTo) return fail(403, 'not_yours', 'That item belongs to another wallet.');
   if (old && at * 1000 <= old.updated) return fail(400, 'stale', 'A newer signed change is already in.');
   // a payment cannot create the seller's USDC account, so it has to be there already
-  if (open && !await usdcAccount(env, ata(payTo).toBase58()).catch(() => null)) return fail(400, 'no_usdc_account', 'The payout wallet has no USDC account yet. Receive any USDC once and list again.');
+  if (open) {
+    const account = await usdcAccount(env, ata(payTo).toBase58()).catch(() => undefined);
+    if (account === undefined) return fail(503, 'chain_busy', 'Could not read the chain just now. Sign and list again in a moment.');
+    if (!account) return fail(400, 'no_usdc_account', 'The payout wallet has no USDC account yet. Receive any USDC once and list again.');
+  }
   if (!old && await bump(env, 'list', await visitor(request)) > Number(env.LIST_PER_DAY || 5)) return fail(429, 'too_many', 'Too many new items from here today.');
   const secret = old && !body.rotate ? old.secret : hex(crypto.getRandomValues(new Uint8Array(32)));
   await env.DB.prepare(`INSERT INTO items (slug, name, summary, docs, url, value, pay_to, secret, open, hidden, at, updated) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, 0, ?10, ?11)

@@ -3,11 +3,13 @@ import { USDC } from '../../core/bodega.mjs';
 
 const PUBLIC_RPC = 'https://solana-rpc.publicnode.com';
 
-export async function rpc(env, method, params) {
+export async function rpc(env, method, params, tries = 3) {
   const r = await fetch(env.SOL_RPC_URL || PUBLIC_RPC, {
     method: 'POST', headers: { 'content-type': 'application/json' }, signal: AbortSignal.timeout(15000),
     body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
   });
+  // a public RPC answers 429 now and then: wait a moment and ask again
+  if (r.status === 429 && tries > 1) { await new Promise((ok) => setTimeout(ok, 500)); return rpc(env, method, params, tries - 1); }
   if (!r.ok) throw new Error(`rpc ${r.status}`);
   const j = await r.json();
   if (j.error) throw new Error(j.error.message || 'rpc error');

@@ -159,7 +159,7 @@
   }
 
   // ---------- a seller's listing ----------
-  const WHY = { invalid_slug: 'The short name needs 3 to 32 characters: a-z, 0-9 and dashes.', slug_taken: 'That name is taken by a house item.', invalid_text: 'Fill in the title and the one-line summary.', invalid_price: 'The price is outside the allowed range.', invalid_url: 'The endpoint must be https on a public host.', no_usdc_account: 'This wallet has no USDC account yet. Receive any USDC once, then list again.', not_yours: 'That name belongs to another wallet.', too_many: 'Too many new items from here today.', bad_signature: 'The signature did not match the wallet.' };
+  const WHY = { chain_busy: 'Could not read the chain just now. Try again in a moment.', invalid_slug: 'The short name needs 3 to 32 characters: a-z, 0-9 and dashes.', slug_taken: 'That name is taken by a house item.', invalid_text: 'Fill in the title and the one-line summary.', invalid_price: 'The price is outside the allowed range.', invalid_url: 'The endpoint must be https on a public host.', no_usdc_account: 'This wallet has no USDC account yet. Receive any USDC once, then list again.', not_yours: 'That name belongs to another wallet.', too_many: 'Too many new items from here today.', bad_signature: 'The signature did not match the wallet.' };
   if ($('s-list')) {
     $('s-list').addEventListener('click', async () => {
       try {
