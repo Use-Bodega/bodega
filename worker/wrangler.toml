@@ -28,7 +28,7 @@ SAMPLE_PER_IP = "10"
 SAMPLE_PER_DAY = "500"
 LIST_PER_DAY = "5"
 OWN_PAYERS = ""        # the team's own buyer wallets, comma separated, so stats can tell outside calls apart
-TOKEN_ADDRESS = ""     # the token mint after launch: a seller holding HOLD_MIN of it pays no fee
+TOKEN_ADDRESS = "A31A13VkGEMCbGrojDXMqtNGWnFXMPNuRQ8wTXZapump"     # the token mint after launch: a seller holding HOLD_MIN of it pays no fee
 HOLD_MIN = "1000000"
 # Secrets (not here):
 #   npx wrangler secret put FEE_PAYER_KEY  (base58 or JSON secret key of the fee payer; it only needs SOL for network fees)
